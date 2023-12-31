@@ -1,7 +1,7 @@
 clear;
+fismatrix  = readfis("knockofffis.fis")
 
-
-v = 5; %inital velocity, m/s
+v = 5.0; %inital velocity, m/s
 caf = 2.787e-4; %cornering stiffness of front tire
 car = 2.787e-4; % ''     '' of rear tire
 lf = 0.5; %cog to front axle, m
@@ -30,45 +30,31 @@ D = [0;0;];
 syms s
 % sys = ss(A,B,C,D);
 % Define the simulation time span
-t = 0:0.01:10; % Adjust the time span as needed
-% 
-% b = [3*2923731754657427553341434166813655040, - 3*2906843307627018433046389551878264303];
-% a = [2*5444517870735015415413993718908291383296, 2*562479712195478469941544517403410432,  2*4755552311528293529155105972227];
-% [W,X,Y,Z] = tf2ss(b,a);
+time = 0:0.1:60; % Adjust the time span as needed
 
-
-phi = inv(s*eye(2)-A);
-H = C*phi*B+D
 
 [b,a] = ss2tf(A,B,C,D)
 newsys = tf(b(1,:),a)
 newsys2 = tf(b(2,:),a)
 
+
 b1 = b(1,:);
 b2 = b(2,:);
 
+ [num,den] = tfdata(newsys);
+ G_sym = poly2sym(cell2mat(num),s)/poly2sym(cell2mat(den),s)
+ step(newsys)
+ Y_lap_sym = G_sym/s; % U(s) = 1/s for the unit step
+ y_time_sym = ilaplace(Y_lap_sym);
 
-% Define the input signal 'delta' (for example, a step input)
-delta = rand(size(t)); % You can modify this input as needed
 
-% Simulate the response of 'newsys' (psidot) to 'delta'
-y1 = lsim(newsys, delta, t);
 
-% Simulate the response of 'newsys2' (slip angle) to 'delta'
-y2 = lsim(newsys2, delta, t);
+% Define arrays to hold the 1001 waypoints for a figure-8 path
+    
+% Calculate the waypoints along the figure-8 path
+waypoints_x = [0, 1, 2, 3, 4];
+waypoints_y = [0, 1, 3, 4, 5];
 
-% Plot the responses
-figure;
-subplot(2, 1, 1);
-plot(t, y1);
-title('Response of newsys (psidot) to Input delta');
-xlabel('Time (s)');
-ylabel('Amplitude');
-grid on;
+save('gatorwaypoints.mat', 'waypoints_x', 'waypoints_y');
+load('gatorwaypoints.mat');
 
-subplot(2, 1, 2);
-plot(t, y2);
-title('Response of newsys2 (slip angle) to Input delta');
-xlabel('Time (s)');
-ylabel('Amplitude');
-grid on;
