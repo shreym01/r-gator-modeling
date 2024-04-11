@@ -25,6 +25,8 @@ helpsearch*/
 slprj/
 sccprj/
 codegen/
++bus_conv_fcns/
+resources/
 
 # Cache files
 *.slxc
