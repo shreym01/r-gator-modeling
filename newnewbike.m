@@ -13,15 +13,15 @@ syms s t X Y Theta
 
 % Bicycle parameters
 lf = 0.5;           % Distance from cog to front [m]
-lr = 0,5;           % Distance from cog to back [m]
-m = 12;             % Mass [kg]
+lr = 0.5;           % Distance from cog to back [m]
+m = 1000;           % Mass [kg]
 Iz = 0;             % Moment of inertia [kg*m^2]
 c = 2.787e-4        % cornering stiffness of tire
-v = 5.0;            %inital velocity, m/s
-theta = pi/2;       %initial steering angle, radians
+v = 5.0;            %inital velocity, [m/s]
+theta = pi/2;       %initial steering angle, [radians]
 
 % Constants
-m = 1000;           % Mass of the bike (kg)
+m = m;              % Mass of the bike (kg)
 g = 9.81;           % Acceleration due to gravity (m/s^2)
 r = 0.33;           % Tire radius (m)
 J = (pi/2) * (r^4); % Moment of inertia of the wheel (kg*m^2)
@@ -51,22 +51,24 @@ x = ilaplace(sol.X, s, t);
 y = ilaplace(sol.Y, s, t);
 theta = ilaplace(sol.Theta, s, t);
 
+time = [0,60];
+
 % Plot results
-fplot(x, [0, 10], 'b', 'LineWidth', 2);
+fplot(x, time, 'b', 'LineWidth', 2);
 xlabel('Time (s)');
 ylabel('Longitudinal Position (m)');
 title('Longitudinal Position of the bike over time');
 grid on;
 
 figure;
-fplot(y, [0, 10], 'r', 'LineWidth', 2);
+fplot(y, time, 'r', 'LineWidth', 2);
 xlabel('Time (s)');
 ylabel('Lateral Position (m)');
 title('Lateral Position of the bike over time');
 grid on;
 
 figure;
-fplot(theta, [0, 10], 'g', 'LineWidth', 2);
+fplot(theta, time, 'g', 'LineWidth', 2);
 xlabel('Time (s)');
 ylabel('Orientation (rad)');
 title('Orientation of the bike over time');
