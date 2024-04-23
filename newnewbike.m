@@ -38,6 +38,8 @@ vx0 = v;
 vy0 = 0;
 omega0 = 0;
 
+syms s x0 vx0 B m r Theta theta0 lambda L J y0 vy0 omega0 C
+
 % Laplace transforms of velocities
 eq1 = s^2 * X - s * x0 - vx0 == B/m * (s*(s+r*Theta)/(s+lambda/2) - r*theta0);
 eq2 = s^2 * Y - s * y0 - vy0 == C/m * (s/(s+lambda/2));
@@ -45,6 +47,9 @@ eq3 = s^2 * Theta - s * theta0 - omega0 == C*L/J * (s/(s+lambda/2));
 
 % Solve equations
 sol = solve([eq1, eq2, eq3], [X, Y, Theta]);
+
+disp(sol.X);
+disp(sol.Theta);
 
 % Inverse Laplace transform
 x = ilaplace(sol.X, s, t);
